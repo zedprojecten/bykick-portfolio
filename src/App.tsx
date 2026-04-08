@@ -6,7 +6,7 @@ const projects = [
       "Premium websites in 1–3 weken, 30–60% goedkoper dan traditionele bureaus. Van intake tot live site: geautomatiseerd met een menselijke eindregie.",
     tags: ["Vite", "React", "Tailwind", "AI pipeline"],
     href: "https://webdesign.bykick.nl",
-    screenshot: "/shots/webdesign.png",
+    screenshot: "/shots/webdesign.webp",
     accent: "from-orange-500 to-pink-500",
     year: "2026",
   },
@@ -17,7 +17,7 @@ const projects = [
       "Jarvis: een mission control voor autonome Claude-agents. Intake → briefing → build → review pipeline met pm2, hooks en live monitoring.",
     tags: ["TypeScript", "Node", "PM2", "Claude Agents"],
     href: "https://jarvis.bykick.nl",
-    screenshot: "/shots/jarvis.png",
+    screenshot: "/shots/jarvis.webp",
     accent: "from-amber-400 to-orange-600",
     year: "2026",
   },
@@ -28,7 +28,7 @@ const projects = [
       "Bereken in 5 minuten hoeveel punten je woning waard is en wat de maximale huurprijs mag zijn. Volledig up-to-date met de officiële Huurcommissie beleidsboeken 2025/2026.",
     tags: ["React", "Supabase", "WWS/WWSO", "Freemium"],
     href: "https://puntify.nl",
-    screenshot: "/shots/puntify.png",
+    screenshot: "/shots/puntify.webp",
     accent: "from-blue-500 to-indigo-600",
     year: "2025",
   },
@@ -39,7 +39,7 @@ const projects = [
       "NS2 Quick Scan in 3 minuten: direct inzicht in je compliance-score, toezichthouders en belangrijkste gaps. Tot €7.000.000 boetes voorkomen.",
     tags: ["NS2", "Compliance", "Quick Scan", "SaaS"],
     href: "https://compliance-checker.nl",
-    screenshot: "/shots/compliance.png",
+    screenshot: "/shots/compliance.webp",
     accent: "from-emerald-400 to-teal-600",
     year: "2026",
   },
@@ -50,7 +50,7 @@ const projects = [
       "Corporate site voor MVD Management B.V. — IT consultancy met focus op ERP, CRM, AI, cybersecurity en digitale transformatie voor grote organisaties.",
     tags: ["Corporate", "IT Consultancy", "ERP", "PMO"],
     href: "https://mvdmanagement.nl",
-    screenshot: "/shots/mvd.png",
+    screenshot: "/shots/mvd.webp",
     accent: "from-slate-400 to-stone-600",
     year: "2024",
   },
@@ -69,7 +69,7 @@ export default function App() {
         <header className="flex items-center justify-between opacity-0 animate-fade-up">
           <div className="flex items-center gap-3">
             <img
-              src="/pf.png"
+              src="/pf.webp"
               alt="Kick"
               className="w-11 h-11 rounded-full object-cover ring-2 ring-orange-400/40"
             />
