@@ -80,7 +80,7 @@ export default function App() {
         <header className="flex items-center justify-between opacity-0 animate-fade-up">
           <div className="flex items-center gap-3">
             <img
-              src="/pf.webp"
+              src="/pf.png"
               alt="Kick"
               className="w-11 h-11 rounded-full object-cover ring-2 ring-orange-400/40"
             />
