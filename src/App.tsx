@@ -1,6 +1,3 @@
-const thum = (url: string) =>
-  `https://image.thum.io/get/width/1200/crop/750/noanimate/${url}`;
-
 const projects = [
   {
     title: "Web Design by Kick",
@@ -9,7 +6,7 @@ const projects = [
       "Premium websites in 1–3 weken, 30–60% goedkoper dan traditionele bureaus. Van intake tot live site: geautomatiseerd met een menselijke eindregie.",
     tags: ["Vite", "React", "Tailwind", "AI pipeline"],
     href: "https://webdesign.bykick.nl",
-    screenshot: thum("https://webdesign.bykick.nl"),
+    screenshot: "/shots/webdesign.png",
     accent: "from-orange-500 to-pink-500",
     year: "2026",
   },
@@ -20,7 +17,7 @@ const projects = [
       "Jarvis: een mission control voor autonome Claude-agents. Intake → briefing → build → review pipeline met pm2, hooks en live monitoring.",
     tags: ["TypeScript", "Node", "PM2", "Claude Agents"],
     href: "https://jarvis.bykick.nl",
-    screenshot: thum("https://jarvis.bykick.nl"),
+    screenshot: "/shots/jarvis.png",
     accent: "from-amber-400 to-orange-600",
     year: "2026",
   },
@@ -31,29 +28,29 @@ const projects = [
       "Bereken in 5 minuten hoeveel punten je woning waard is en wat de maximale huurprijs mag zijn. Volledig up-to-date met de officiële Huurcommissie beleidsboeken 2025/2026.",
     tags: ["React", "Supabase", "WWS/WWSO", "Freemium"],
     href: "https://puntify.nl",
-    screenshot: thum("https://puntify.nl"),
+    screenshot: "/shots/puntify.png",
     accent: "from-blue-500 to-indigo-600",
     year: "2025",
   },
   {
     title: "Compliance Checker",
-    tagline: "Scan je bedrijf op compliance risico's",
+    tagline: "Weet waar je staat voordat de toezichthouder het vraagt",
     description:
-      "AI-gedreven tool die bedrijven helpt snel inzicht te krijgen in compliance gaps. Binnenkort live — eerste release in voorbereiding.",
-    tags: ["AI", "Compliance", "SaaS"],
-    href: "https://compliancechecker.nl",
-    screenshot: thum("https://compliancechecker.nl"),
+      "NS2 Quick Scan in 3 minuten: direct inzicht in je compliance-score, toezichthouders en belangrijkste gaps. Tot €7.000.000 boetes voorkomen.",
+    tags: ["NS2", "Compliance", "Quick Scan", "SaaS"],
+    href: "https://compliance-checker.nl",
+    screenshot: "/shots/compliance.png",
     accent: "from-emerald-400 to-teal-600",
     year: "2026",
   },
   {
     title: "MVD Management",
-    tagline: "IT consultancy sinds 2007",
+    tagline: "25+ jaar expertise in IT projectmanagement",
     description:
-      "Corporate site voor MVD Management B.V. — professionele IT consultancy met focus op ERP, CRM, AI en digitale transformatie.",
-    tags: ["Corporate", "IT Consultancy", "ERP", "CRM"],
+      "Corporate site voor MVD Management B.V. — IT consultancy met focus op ERP, CRM, AI, cybersecurity en digitale transformatie voor grote organisaties.",
+    tags: ["Corporate", "IT Consultancy", "ERP", "PMO"],
     href: "https://mvdmanagement.nl",
-    screenshot: thum("https://mvdmanagement.nl"),
+    screenshot: "/shots/mvd.png",
     accent: "from-slate-400 to-stone-600",
     year: "2024",
   },
