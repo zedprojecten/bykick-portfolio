@@ -1,3 +1,6 @@
+const thum = (url: string) =>
+  `https://image.thum.io/get/width/1200/crop/750/noanimate/${url}`;
+
 const projects = [
   {
     title: "Web Design by Kick",
@@ -6,6 +9,7 @@ const projects = [
       "Premium websites in 1–3 weken, 30–60% goedkoper dan traditionele bureaus. Van intake tot live site: geautomatiseerd met een menselijke eindregie.",
     tags: ["Vite", "React", "Tailwind", "AI pipeline"],
     href: "https://webdesign.bykick.nl",
+    screenshot: thum("https://webdesign.bykick.nl"),
     accent: "from-orange-500 to-pink-500",
     year: "2026",
   },
@@ -16,8 +20,42 @@ const projects = [
       "Jarvis: een mission control voor autonome Claude-agents. Intake → briefing → build → review pipeline met pm2, hooks en live monitoring.",
     tags: ["TypeScript", "Node", "PM2", "Claude Agents"],
     href: "https://jarvis.bykick.nl",
+    screenshot: thum("https://jarvis.bykick.nl"),
     accent: "from-amber-400 to-orange-600",
     year: "2026",
+  },
+  {
+    title: "Puntify",
+    tagline: "Gratis huurprijscheck op basis van het WWS",
+    description:
+      "Bereken in 5 minuten hoeveel punten je woning waard is en wat de maximale huurprijs mag zijn. Volledig up-to-date met de officiële Huurcommissie beleidsboeken 2025/2026.",
+    tags: ["React", "Supabase", "WWS/WWSO", "Freemium"],
+    href: "https://puntify.nl",
+    screenshot: thum("https://puntify.nl"),
+    accent: "from-blue-500 to-indigo-600",
+    year: "2025",
+  },
+  {
+    title: "Compliance Checker",
+    tagline: "Scan je bedrijf op compliance risico's",
+    description:
+      "AI-gedreven tool die bedrijven helpt snel inzicht te krijgen in compliance gaps. Binnenkort live — eerste release in voorbereiding.",
+    tags: ["AI", "Compliance", "SaaS"],
+    href: "https://compliancechecker.nl",
+    screenshot: thum("https://compliancechecker.nl"),
+    accent: "from-emerald-400 to-teal-600",
+    year: "2026",
+  },
+  {
+    title: "MVD Management",
+    tagline: "IT consultancy sinds 2007",
+    description:
+      "Corporate site voor MVD Management B.V. — professionele IT consultancy met focus op ERP, CRM, AI en digitale transformatie.",
+    tags: ["Corporate", "IT Consultancy", "ERP", "CRM"],
+    href: "https://mvdmanagement.nl",
+    screenshot: thum("https://mvdmanagement.nl"),
+    accent: "from-slate-400 to-stone-600",
+    year: "2024",
   },
 ];
 
@@ -67,55 +105,76 @@ export default function App() {
         </section>
 
         {/* Projects */}
-        <section className="mt-20 sm:mt-28 grid gap-6 sm:grid-cols-2">
+        <section className="mt-20 sm:mt-28 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {projects.map((p, i) => (
             <a
               key={p.title}
               href={p.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="card-glow group relative rounded-3xl p-8 opacity-0 animate-fade-up flex flex-col"
+              className="card-glow group relative rounded-3xl overflow-hidden opacity-0 animate-fade-up flex flex-col"
               style={{ animationDelay: `${0.3 + i * 0.12}s` }}
             >
-              <div className="flex items-start justify-between mb-6">
+              {/* Screenshot header */}
+              <div className="relative aspect-[16/10] overflow-hidden bg-stone-900/60 border-b border-stone-800/60">
+                <img
+                  src={p.screenshot}
+                  alt={`${p.title} preview`}
+                  loading="lazy"
+                  className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).style.display = "none";
+                  }}
+                />
                 <div
-                  className={`inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${p.accent} shadow-lg shadow-orange-900/30`}
-                >
-                  <span className="text-white font-black text-lg">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                </div>
-                <span className="text-xs text-stone-500 font-mono">{p.year}</span>
+                  className={`absolute inset-0 bg-gradient-to-br ${p.accent} opacity-0 group-hover:opacity-20 transition-opacity duration-500`}
+                />
+                <span className="absolute top-3 right-3 text-xs text-stone-300 font-mono bg-black/60 backdrop-blur px-2 py-1 rounded-md border border-stone-700/50">
+                  {p.year}
+                </span>
               </div>
 
-              <h3 className="text-2xl font-extrabold tracking-tight">{p.title}</h3>
-              <p className="mt-2 text-sm text-orange-200/80 font-medium">{p.tagline}</p>
-              <p className="mt-4 text-stone-400 leading-relaxed text-sm flex-1">{p.description}</p>
-
-              <div className="mt-6 flex flex-wrap gap-2">
-                {p.tags.map((t) => (
-                  <span
-                    key={t}
-                    className="text-xs px-2.5 py-1 rounded-full bg-stone-800/60 text-stone-300 border border-stone-700/50"
+              {/* Content */}
+              <div className="p-8 flex flex-col flex-1">
+                <div className="flex items-start justify-between mb-4">
+                  <div
+                    className={`inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${p.accent} shadow-lg shadow-orange-900/30`}
                   >
-                    {t}
-                  </span>
-                ))}
-              </div>
+                    <span className="text-white font-black text-lg">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                  </div>
+                </div>
 
-              <div className="mt-6 flex items-center gap-2 text-sm font-semibold text-orange-300 group-hover:text-orange-200 transition-colors">
-                Bekijk live
-                <svg
-                  className="w-4 h-4 transition-transform group-hover:translate-x-1"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+                <h3 className="text-2xl font-extrabold tracking-tight">{p.title}</h3>
+                <p className="mt-2 text-sm text-orange-200/80 font-medium">{p.tagline}</p>
+                <p className="mt-4 text-stone-400 leading-relaxed text-sm flex-1">{p.description}</p>
+
+                <div className="mt-6 flex flex-wrap gap-2">
+                  {p.tags.map((t) => (
+                    <span
+                      key={t}
+                      className="text-xs px-2.5 py-1 rounded-full bg-stone-800/60 text-stone-300 border border-stone-700/50"
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </div>
+
+                <div className="mt-6 flex items-center gap-2 text-sm font-semibold text-orange-300 group-hover:text-orange-200 transition-colors">
+                  Bekijk live
+                  <svg
+                    className="w-4 h-4 transition-transform group-hover:translate-x-1"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
               </div>
             </a>
           ))}
