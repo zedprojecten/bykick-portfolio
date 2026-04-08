@@ -107,8 +107,8 @@ export default function App() {
             die <span className="text-gradient-sunset">écht werken</span>.
           </h1>
           <p className="mt-6 max-w-2xl text-lg text-stone-300 leading-relaxed">
-            AI-gedreven webdesign voor MKB en een mission control voor autonome agents.
-            Twee projecten, één obsessie: menselijk werk automatiseren zonder de ziel eruit te slopen.
+            AI-gedreven tools voor MKB, solo-ondernemers en mijn eigen workflow.
+            Eén obsessie: menselijk werk automatiseren zonder de ziel eruit te slopen.
           </p>
         </section>
 
