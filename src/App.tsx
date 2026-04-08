@@ -11,6 +11,17 @@ const projects = [
     year: "2026",
   },
   {
+    title: "AI Solutions",
+    tagline: "Kickstart je bedrijf met AI chatbots & automations",
+    description:
+      "Maatwerk AI chatbots en workflow automations voor MKB. Bespaar uren per week, geef klanten 24/7 service en laat AI de repetitieve taken overnemen.",
+    tags: ["AI", "Chatbots", "Zapier", "Automation"],
+    href: "https://aisolutions.bykick.nl",
+    screenshot: "/shots/aisolutions.webp",
+    accent: "from-purple-500 to-pink-500",
+    year: "2026",
+  },
+  {
     title: "Agent Mission Control",
     tagline: "Web UI om AI-agents 24/7 te draaien op een VPS",
     description:

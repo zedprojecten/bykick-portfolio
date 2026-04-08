@@ -25,6 +25,7 @@ const shotsDir = join(__dirname, "..", "public", "shots");
 // Lijst moet synchroon blijven met src/App.tsx projects array.
 const sites = [
   { name: "webdesign", url: "https://webdesign.bykick.nl" },
+  { name: "aisolutions", url: "https://aisolutions.bykick.nl" },
   { name: "jarvis", url: "https://jarvis.bykick.nl" },
   { name: "puntify", url: "https://puntify.nl" },
   { name: "compliance", url: "https://compliance-checker.nl" },
