@@ -124,7 +124,7 @@ export default function App() {
               style={{ animationDelay: `${0.3 + i * 0.12}s` }}
             >
               {/* Screenshot header */}
-              <div className="relative aspect-[16/10] overflow-hidden bg-stone-900/60 border-b border-stone-800/60">
+              <div className="relative aspect-16/10 overflow-hidden bg-stone-900/60 border-b border-stone-800/60">
                 <img
                   src={p.screenshot}
                   alt={`${p.title} preview`}
@@ -135,9 +135,9 @@ export default function App() {
                   }}
                 />
                 <div
-                  className={`absolute inset-0 bg-gradient-to-br ${p.accent} opacity-0 group-hover:opacity-20 transition-opacity duration-500`}
+                  className={`absolute inset-0 bg-linear-to-br ${p.accent} opacity-0 group-hover:opacity-20 transition-opacity duration-500`}
                 />
-                <span className="absolute top-3 right-3 text-xs text-stone-300 font-mono bg-black/60 backdrop-blur px-2 py-1 rounded-md border border-stone-700/50">
+                <span className="absolute top-3 right-3 text-xs text-stone-300 font-mono bg-black/60 backdrop-blur-sm px-2 py-1 rounded-md border border-stone-700/50">
                   {p.year}
                 </span>
               </div>
@@ -146,7 +146,7 @@ export default function App() {
               <div className="p-8 flex flex-col flex-1">
                 <div className="flex items-start justify-between mb-4">
                   <div
-                    className={`inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${p.accent} shadow-lg shadow-orange-900/30`}
+                    className={`inline-flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br ${p.accent} shadow-lg shadow-orange-900/30`}
                   >
                     <span className="text-white font-black text-lg">
                       {String(i + 1).padStart(2, "0")}
