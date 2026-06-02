@@ -1,0 +1,63 @@
+#!/bin/sh
+#
+# Post-commit hook voor Jarvis monorepo (core.hooksPath = scripts/git-hooks).
+#
+# Sluitstuk van de committer-email auto-fix. De pre-commit hook unsette al een
+# afwijkende lokale git config user.email, maar git resolvet de identity VOORDAT
+# pre-commit draait, dus de zojuist gemaakte commit kan nog een verkeerde
+# author/committer hebben. Hier amenden we die commit met de globale
+# geverifieerde identity, zodat Vercel hem accepteert (anders stille deploy-skip).
+#
+# Niet-blokkerend en non-recursief:
+#  - Doet alleen iets als author of committer afwijkt van de vereiste identity.
+#  - JARVIS_IDENTITY_AMEND voorkomt dat de amend zichzelf opnieuw triggert.
+#  - Tijdens een rebase/merge/cherry-pick laten we de history met rust (amenden
+#    daar zou de operatie corrumperen).
+#
+# LET OP — merge-commits: git roept post-commit NIET aan voor de commit die
+# `git merge` zelf maakt, dus die wordt hier niet auto-gecorrigeerd. In de normale
+# flow (sessie commit eerst haar werk -> dán merge) is de lokale override al door
+# pre-commit geunset, dus de merge gebruikt de globale identity. Mocht een
+# merge-commit tóch een foute author hebben, dan blokkeert de pre-push hook 'm hard.
+
+# Recursie-guard: de amend hieronder triggert post-commit opnieuw.
+[ -n "$JARVIS_IDENTITY_AMEND" ] && exit 0
+
+# Niet ingrijpen midden in een rebase/merge/cherry-pick/bisect.
+GIT_DIR=$(git rev-parse --git-dir 2>/dev/null || echo ".git")
+if [ -d "$GIT_DIR/rebase-merge" ] || [ -d "$GIT_DIR/rebase-apply" ] || \
+   [ -f "$GIT_DIR/MERGE_HEAD" ] || [ -f "$GIT_DIR/CHERRY_PICK_HEAD" ] || \
+   [ -f "$GIT_DIR/BISECT_LOG" ]; then
+  exit 0
+fi
+
+# Canonieke bron: scripts/lib/git-identity.mjs (REQUIRED_EMAIL). Bij wijziging ook
+# pre-commit + pre-push + git-identity.mjs aanpassen.
+REQUIRED_EMAIL="267702913+zedprojecten@users.noreply.github.com"
+AE=$(git show -s --format='%ae' HEAD 2>/dev/null || true)
+CE=$(git show -s --format='%ce' HEAD 2>/dev/null || true)
+
+if [ "$AE" = "$REQUIRED_EMAIL" ] && [ "$CE" = "$REQUIRED_EMAIL" ]; then
+  exit 0
+fi
+
+# Git exporteert GIT_AUTHOR_* / GIT_COMMITTER_* van de zojuist gemaakte commit
+# in deze hook-omgeving. Die env-waarden winnen het van de git config en zouden
+# de oude (foute) author terug-zetten, zelfs met --reset-author. Daarom expliciet
+# clearen zodat de amend de globale config-identity oppakt.
+unset GIT_AUTHOR_EMAIL GIT_AUTHOR_NAME GIT_AUTHOR_DATE
+unset GIT_COMMITTER_EMAIL GIT_COMMITTER_NAME GIT_COMMITTER_DATE
+
+# --allow-empty: een (test-)commit zonder wijzigingen mag niet alsnog falen.
+JARVIS_IDENTITY_AMEND=1 git commit --amend --reset-author --no-edit --no-verify --allow-empty >/dev/null 2>&1
+
+NEW_AE=$(git show -s --format='%ae' HEAD 2>/dev/null || true)
+NEW_CE=$(git show -s --format='%ce' HEAD 2>/dev/null || true)
+if [ "$NEW_AE" = "$REQUIRED_EMAIL" ] && [ "$NEW_CE" = "$REQUIRED_EMAIL" ]; then
+  printf '\033[33m[identity-fix]\033[0m commit-author gecorrigeerd naar globale identity (%s).\n' "$NEW_AE"
+else
+  # Amend lukte niet (zeldzaam). Niet-blokkerend; de pre-push backstop vangt dit
+  # alsnog hard af voordat het Vercel raakt.
+  printf '\033[33m[identity-fix]\033[0m WAARSCHUWING: kon commit-author niet corrigeren (author=%s). De pre-push hook blokkeert dit.\n' "$NEW_AE"
+fi
+exit 0

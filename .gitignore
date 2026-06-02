@@ -7,3 +7,4 @@ dist
 .vite
 *.tsbuildinfo
 __migration_baselines__/
+.claude/worktrees/

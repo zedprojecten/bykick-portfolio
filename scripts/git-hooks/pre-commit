@@ -1,0 +1,14 @@
+#!/bin/sh
+# Pre-commit: committer-email auto-fix (via core.hooksPath = scripts/git-hooks).
+# Een afwijkende lokale user.email shadowt de globale geverifieerde identity en laat
+# Vercel de deploy stil weigeren. Unset 'm hier (corrigeert toekomstige commits; de
+# post-commit hook fixt de huidige). Canoniek: scripts/lib/git-identity.mjs.
+set -e
+REQUIRED_EMAIL="267702913+zedprojecten@users.noreply.github.com"
+LOCAL_EMAIL=$(git config --local --get user.email 2>/dev/null || true)
+if [ -n "$LOCAL_EMAIL" ] && [ "$LOCAL_EMAIL" != "$REQUIRED_EMAIL" ]; then
+  git config --local --unset-all user.email 2>/dev/null || true
+  git config --local --unset-all user.name 2>/dev/null || true
+  printf '\033[33m[identity-fix]\033[0m lokale user.email "%s" verwijderd; commit gebruikt globale identity.\n' "$LOCAL_EMAIL"
+fi
+exit 0

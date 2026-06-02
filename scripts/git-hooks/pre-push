@@ -1,0 +1,77 @@
+#!/bin/sh
+#
+# Pre-push hook voor Jarvis monorepo (core.hooksPath = scripts/git-hooks).
+#
+# Twee HARDE blokkades — geen --no-verify-cultuur:
+#  1. Author-backstop: weiger als een te-pushen commit een author/committer-email
+#     heeft die niet de geverifieerde identity is. Vangt het gefreestylde
+#     bot-email-geval dat Vercel-deploys stil laat falen.
+#  2. Typecheck-gate: weiger als `npm run typecheck` faalt, zodat kapotte code
+#     nooit Vercel/VPS raakt ("lokaal leek het te werken").
+#
+# stdin-formaat (git): <local ref> <local sha> <remote ref> <remote sha>
+
+set -e
+
+# Canonieke bron van deze waarde: scripts/lib/git-identity.mjs (REQUIRED_EMAIL).
+# POSIX-sh kan die .mjs niet importeren, dus hier hardcoded — bij wijziging ook
+# scripts/git-hooks/pre-commit + post-commit + scripts/lib/git-identity.mjs aanpassen.
+REQUIRED_EMAIL="267702913+zedprojecten@users.noreply.github.com"
+RED='\033[0;31m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
+# ─── 1. Author-backstop ─────────────────────────────────────────────────────
+RANGE_SHAS=""
+z40="0000000000000000000000000000000000000000"
+while read -r local_ref local_sha remote_ref remote_sha; do
+  [ -z "$local_sha" ] && continue
+  [ "$local_sha" = "$z40" ] && continue   # branch-delete, niets te checken
+  if [ "$remote_sha" = "$z40" ]; then
+    # Nieuwe branch: check commits die nog niet op een remote-branch staan.
+    RANGE=$(git rev-list "$local_sha" --not --remotes 2>/dev/null || true)
+  else
+    RANGE=$(git rev-list "$remote_sha..$local_sha" 2>/dev/null || true)
+  fi
+  # Fail closed: is de range leeg (bv. nieuwe branch wijst naar commits die al via
+  # een andere remote-ref bereikbaar zijn), scan dan minstens de tip zelf. Anders
+  # zou de author-check stilletjes overgeslagen worden — precies de bypass die we
+  # niet willen.
+  if [ -z "$(printf '%s' "$RANGE" | tr -d '[:space:]')" ]; then
+    RANGE="$local_sha"
+  fi
+  RANGE_SHAS="$RANGE_SHAS $RANGE"
+done
+
+BAD=""
+for sha in $RANGE_SHAS; do
+  AE=$(git show -s --format='%ae' "$sha" 2>/dev/null) || continue
+  CE=$(git show -s --format='%ce' "$sha" 2>/dev/null) || continue
+  ael=$(printf '%s' "$AE" | tr '[:upper:]' '[:lower:]')
+  cel=$(printf '%s' "$CE" | tr '[:upper:]' '[:lower:]')
+  req=$(printf '%s' "$REQUIRED_EMAIL" | tr '[:upper:]' '[:lower:]')
+  if [ "$ael" != "$req" ] || [ "$cel" != "$req" ]; then
+    BAD="$BAD\n  ${sha} author=${AE} committer=${CE}"
+  fi
+done
+
+if [ -n "$BAD" ]; then
+  printf "${RED}[pre-push GEBLOKKEERD]${NC} commits met een niet-toegestane author/committer-email:\n"
+  printf '%b\n' "$BAD"
+  printf "\nVereist: ${YELLOW}%s${NC}\n" "$REQUIRED_EMAIL"
+  printf "Fix de history voor je pusht, bijv.:\n"
+  printf "  git config --local --unset-all user.email\n"
+  printf "  git rebase -r --exec 'git commit --amend --reset-author --no-edit' origin/main\n"
+  printf "(Vercel weigert anders stil de deploy: COMMIT_AUTHOR_REQUIRED.)\n"
+  exit 1
+fi
+
+# ─── 2. Typecheck-gate ──────────────────────────────────────────────────────
+printf "[pre-push] typecheck...\n"
+if ! npm run typecheck --if-present --silent; then
+  printf "${RED}[pre-push GEBLOKKEERD]${NC} typecheck faalt. Fix de type-errors voor je pusht.\n"
+  exit 1
+fi
+
+printf "[pre-push] ok\n"
+exit 0
